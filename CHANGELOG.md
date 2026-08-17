@@ -36,7 +36,7 @@ All notable changes to Cycle Buffers will be documented in this file.
 - Nuclear generators are supported by the implementation, but nuclear-specific behaviour has not yet been tested in-game.
 
 
-1.0.1
+## [1.0.1] - 2026-08-17
 
 - Fixed an intermittent crash when loading/reloading saves.
 - Improved session settings lifecycle handling.
