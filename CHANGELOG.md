@@ -34,3 +34,10 @@ All notable changes to Cycle Buffers will be documented in this file.
 - Existing buffers above the configured limit are preserved and allowed to drain naturally.
 - Nuclear waste inventories are not modified.
 - Nuclear generators are supported by the implementation, but nuclear-specific behaviour has not yet been tested in-game.
+
+
+1.0.1
+
+- Fixed an intermittent crash when loading/reloading saves.
+- Improved session settings lifecycle handling.
+- Improved compatibility with mods that require save reloads, including stack-size mods.
