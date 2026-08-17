@@ -79,7 +79,7 @@ namespace
 	bool CachedGeneratorBuffersEnabled = true;
 	int32 CachedGeneratorBufferCycles = 3;
 
-	USessionSettingsManager* SubscribedSessionSettingsManager = nullptr;
+	TWeakObjectPtr<USessionSettingsManager> SubscribedSessionSettingsManager;
 	FOnOptionUpdated SessionSettingsUpdatedDelegate;
 
 	void ApplyCycleBuffers(AFGBuildableManufacturer* Manufacturer);
@@ -189,12 +189,15 @@ namespace
 
 	void UnsubscribeFromSessionSettings()
 	{
-		if (IsValid(SubscribedSessionSettingsManager) && SessionSettingsUpdatedDelegate.IsBound())
+		if (SessionSettingsUpdatedDelegate.IsBound())
 		{
-			SubscribedSessionSettingsManager->UnsubscribeToAllOptionUpdates(SessionSettingsUpdatedDelegate);
+			if (USessionSettingsManager* Manager = SubscribedSessionSettingsManager.Get())
+			{
+				Manager->UnsubscribeToAllOptionUpdates(SessionSettingsUpdatedDelegate);
+			}
 		}
 
-		SubscribedSessionSettingsManager = nullptr;
+		SubscribedSessionSettingsManager.Reset();
 		SessionSettingsUpdatedDelegate.Unbind();
 	}
 
@@ -315,7 +318,7 @@ namespace
 			return;
 		}
 
-		if (SubscribedSessionSettingsManager == Manager && SessionSettingsUpdatedDelegate.IsBound())
+		if (SubscribedSessionSettingsManager.Get() == Manager && SessionSettingsUpdatedDelegate.IsBound())
 		{
 			return;
 		}
@@ -348,7 +351,7 @@ namespace
 			SubscribeToSessionSettings(CurrentWorld);
 			RefreshGeneratorSettings(CurrentWorld);
 		}
-		else if (!IsValid(SubscribedSessionSettingsManager))
+		else if (!SubscribedSessionSettingsManager.IsValid())
 		{
 			SubscribeToSessionSettings(CurrentWorld);
 		}
